@@ -1,3 +1,7 @@
+Soporte en discord: https://discord.gg/4arKxZJwxw
+
+
+
 #define NIVEL_GLOBAL 4
 
 new GlobalCooldown[MAX_PLAYERS];
