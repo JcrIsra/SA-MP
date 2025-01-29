@@ -1,0 +1,46 @@
+#define NIVEL_GLOBAL 4
+
+new GlobalCooldown[MAX_PLAYERS];
+
+CMD:gb(playerid, params[])
+{
+    if (PlayerInfo[playerid][jNivel] < NIVEL_GLOBAL)
+        return SendClientMessage(playerid, -1, "{FF0000}Error: {FFFFFF}No tienes el nivel suficiente para usar este comando.");
+
+    if (gettime() < GlobalCooldown[playerid])
+    {
+        new tiempoRestante = GlobalCooldown[playerid] - gettime(); 
+        new minutos = tiempoRestante / 60; 
+        new segundos = tiempoRestante % 60; 
+
+        new mensajeCooldown[128];
+        format(mensajeCooldown, sizeof(mensajeCooldown), "{FFA500}Advertencia: {FFFFFF}Debes esperar {FFA500}%d:%02d {FFFFFF}minutos antes de usar este comando nuevamente.", minutos, segundos);
+        return SendClientMessage(playerid, -1, mensajeCooldown);
+    }
+
+    if (isnull(params))
+        return SendClientMessage(playerid, -1, "{FF0000}Uso: {FFFFFF}/gb [mensaje]");
+
+    new nombre[MAX_PLAYER_NAME];
+    GetPlayerName(playerid, nombre, sizeof(nombre));
+
+    new mensaje[256];
+    format(mensaje, sizeof(mensaje), "{00FF00}+----------------------------------------+");
+    SendClientMessageToAll(-1, mensaje);
+
+    format(mensaje, sizeof(mensaje), "{00FF00}¦ {FF00FF}Global Chat {FFFFFF}- Mensaje de {FF00FF}%s [%d]", nombre, playerid);
+    SendClientMessageToAll(-1, mensaje);
+
+    format(mensaje, sizeof(mensaje), "{00FF00}¦ {FFFFFF}%s", params);
+    SendClientMessageToAll(-1, mensaje);
+
+    format(mensaje, sizeof(mensaje), "{00FF00}+----------------------------------------+");
+    SendClientMessageToAll(-1, mensaje);
+
+    SendClientMessage(playerid, -1, "{00FF00}Éxito: {FFFFFF}Tu mensaje global ha sido enviado correctamente.");
+
+
+    GlobalCooldown[playerid] = gettime() + 90; 
+
+    return 1;
+}
